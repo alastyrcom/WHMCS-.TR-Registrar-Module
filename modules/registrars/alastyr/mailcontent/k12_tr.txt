@@ -1,0 +1,5 @@
+<p style="margin: 0 0 22px; font-size: 12px;">
+Aşağıda yer alan resmi belgelerden faaliyet alanınıza uygun olanlardan sadece bir tanesini göndermeniz yeterli olacaktır. <br /><br /><br />
+<p style="margin: 0 0 22px; font-size: 12px;">Alan adı talebinde bulunan kuruluş devlet okulu ise, ilköğretim, lise ve dengi okulların müdürlük makamınca verilmiş, antetli kağıt üzerinde makamca imzalanmış ve kaşeli yazılı izin belgesinin, ya da Alan Adı Tahsis Formu'nun yetkili kişi tarafından, imzalı ve kaşeli olarak gönderilmesi gerekmektedir.
+<br /></p>
+<p style="margin: 0 0 22px; font-size: 12px;">Alan adı talebinde bulunan kuruluş özel okul ise, Milli Eğitim Bakanlığı tarafından verilen Kurum Açma İzin Belgesi ile ilgili belediyeye başvurularak temin edilen İş Yeri Açma ve Çalışma Ruhsatı'nın gönderilmesi gerekmektedir.<br /></p>

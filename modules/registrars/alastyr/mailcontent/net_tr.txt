@@ -1,0 +1,6 @@
+<br />
+<p style="margin: 0 0 22px; font-size: 12px;">Aşağıda yer alan resmi belgelerden faaliyet alanınıza uygun olanlardan sadece bir tanesini göndermeniz yeterli olacaktır. <br /><br /><br />
+<strong>Telekomünikasyon Kurumu'ndan alınmış </strong>"İSS (İnternet Servis Sağlayıcı) Genel İzin Belgesi" (Telekomünikasyon Lisansı)</p>
+<p style="margin: 0 0 22px; font-size: 12px;"><strong>Web tabanlı çalışan tüm kişi ya da kuruluşlar için</strong>, başvuran kişi ya da kuruluş tarafından başvurunun ayrıntılarını içeren (var olan .com ya da .net uzantılı web sayfalarının adresleri vb.) bir dilekçe (kişi adına yapılan başvurularda ilgili kişinin nüfus cüzdanı fotokopisi ile birlikte), <br /><br />
+<strong>İnternet hizmeti vereceğini beyan ederek "net.tr" uzantısı için başvuran kişi ya da kuruluşlar için</strong>,başvurunun ayrıntılarını içeren ve yapılacağı taahhüt edilen web sayfanın yapılmadığının tespiti durumunda, ilgili alan adının silineceğinin kabul edildiğini belirten bir dilekçe (kişi adına yapılan başvurularda ilgili kişinin nüfus cüzdanı fotokopisi ile birlikte). <br /><br />
+<br />Dilekçe örneği için lütfen <a href="https://www.nic.tr/forms/Net.tr_DilekceOrnegi.doc" target="_blank">tıklayınız.</a></p>
