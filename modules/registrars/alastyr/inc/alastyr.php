@@ -53,6 +53,25 @@ function alastyr_CheckDomainStatus($params){
 
     return $result;
 }
+function alastyr_DomainInfo($params){
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+    $postfields['domainName'] = $params['domainName'];
+
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    if($params['mode'] ==  "test"){
+        $postfields['mode'] = "test";
+    }
+
+    $res = alastyr_getRequest("getdomaininfo", $postfields, $auth);
+    $result = $res['result'];
+
+    return $result;
+}
 function alastyr_GetConfigurationParamsrData() {
     $result = Capsule::table('tblregistrars')->where('registrar', 'resellerclub')->get();
     foreach($result as $item) {
@@ -133,22 +152,22 @@ function alastyr_ErrorMesages($params){
 }
 
 function alastyr_ActionTypes($params){
-     $actiontype['1000'] = "Yeni Alan Adı Başvurusu";
-     $actiontype['1001'] = "Alan Adı Başvurusu Onayı";
-     $actiontype['1018'] = "Alan Adı Başvurusu Reddi";
-     $actiontype['1019'] = "Alan Adı Başvurusu İptal";
-     $actiontype['1020'] = "Alan Adı Geri Alma Reddi";
-     $actiontype['1118'] = "IDN Alan Adı Başvurusu Reddi";
-     $actiontype['3010'] = "Sahip Bilgilerini Değiştir";
-     $actiontype['3022'] = "Sahip Değişikliği";
-     $actiontype['7001'] = "Fatura Oluşturma";
-     $actiontype['9000'] = "Belge Kabul Edildi";
-     $actiontype['9003'] = "Belge Uyarısı, yeniden gönderin";
-     $actiontype['10001'] = "Belge Ulaştı";
-     $actiontype['10002'] = "Alan Adı Belgeyle İlişkilendirdi";
-     $actiontype['10003'] = "Belge Kapandı";
-     $actiontype['10008'] = "Alan Adı Belgeyle İlişkilendirmedi";
-	return $actiontype[$params];
+    $actiontype['1000'] = "Yeni Alan Adı Başvurusu";
+    $actiontype['1001'] = "Alan Adı Başvurusu Onayı";
+    $actiontype['1018'] = "Alan Adı Başvurusu Reddi";
+    $actiontype['1019'] = "Alan Adı Başvurusu İptal";
+    $actiontype['1020'] = "Alan Adı Geri Alma Reddi";
+    $actiontype['1118'] = "IDN Alan Adı Başvurusu Reddi";
+    $actiontype['3010'] = "Sahip Bilgilerini Değiştir";
+    $actiontype['3022'] = "Sahip Değişikliği";
+    $actiontype['7001'] = "Fatura Oluşturma";
+    $actiontype['9000'] = "Belge Kabul Edildi";
+    $actiontype['9003'] = "Belge Uyarısı, yeniden gönderin";
+    $actiontype['10001'] = "Belge Ulaştı";
+    $actiontype['10002'] = "Alan Adı Belgeyle İlişkilendirdi";
+    $actiontype['10003'] = "Belge Kapandı";
+    $actiontype['10008'] = "Alan Adı Belgeyle İlişkilendirmedi";
+    return $actiontype[$params];
 }
 
 function alastyr_addDomainLog($array){
@@ -256,10 +275,10 @@ function alastyr_ViewDomainLogs($params){
     ';
     $token = generate_token($type = "link");
     foreach($return as $notesData) {
-    	$action = "";
-    	$action = alastyr_ActionTypes($notesData['actiontype']). ' - ';
-    	if(!empty($notesData['actioncomment'])){
-    	    $action .= $notesData['actioncomment'] . ' - ';
+        $action = "";
+        $action = alastyr_ActionTypes($notesData['actiontype']). ' - ';
+        if(!empty($notesData['actioncomment'])){
+            $action .= $notesData['actioncomment'] . ' - ';
         }
         $table .= '            
         <tr>
@@ -581,7 +600,7 @@ function alastyr_SendMultiDocument($params){
                 if($result['status'] == 0){
                     $res = alastyr_getRequest("uploaddocuments", $postfields, $auth);
                     if($res['result']['uploaded'] == "true") {
-                        $logdocuments .= "(" . $res['result']['description'] . " : " . $res['result']['file'] . ") ";
+                        $logdocuments .= "(" . $res['result']['description'] . " :<a href=\"clientsdomains.php?action=domaindetails&id=".$params['domainid']."&regaction=custom&ac=GetDomainDocument&document=".$res['result']['file']."\"  target=\"_blank\">" . $res['result']['file'] . "</a>)";
                     } else {
                         return array('error' => $res['error']);
                     }

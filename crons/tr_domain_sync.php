@@ -16,8 +16,9 @@ else
 $params = alastyr_GetConfigurationParamsData();
 $postfields['ApiKey'] = $params['ApiKey'];
 $postfields['ApiSecret'] = $params['ApiSecret'];
-$waitingdomains = Capsule::table('mod_alastyrdomain')->where('laststatus', '!=', '7')->orderby('updated_at', 'asc')->get();
+$waitingdomains = Capsule::table('mod_alastyrdomain')->where('laststatus', '!=', '7')->orWhereNull('laststatus')->orderby('updated_at', 'asc')->get();
 $updatecount = 0;
+
 
 foreach($waitingdomains as $domain){
 
@@ -52,13 +53,13 @@ foreach($waitingdomains as $domain){
         $laststate = alastyr_DomainInfo($postfields);
         $expdate = date("Y-m-d", substr($laststate['expirationDate'], 0, -3 ));
         $command = 'UpdateClientDomain';
-        $postData = array(
+        $postDataexp = array(
             'domainid' => $domaininfo->id,
             'status' => 'Active',
             'nextduedate' => $expdate,
             'expirydate' => $expdate
         );
-        $results = localAPI($command, $postDatamail);
+        $results = localAPI($command, $postDataexp);
     }
 
     $logarray = array('domainid' => $domain->domainid, 'userid' => $domain->userid, 'domainname' => $domain->domainname, 'ticketid' => $laststate['ticketNumber'], 'laststatus' => $laststate['status'], 'actiontype' => $laststate['actionType'], 'actioncomment' => $laststate['actionComment'], 'lastdescription' => $laststate['detail']);

@@ -7,8 +7,8 @@ use WHMCS\Database\Capsule;
 use WHMCS\Domain\Registrar\Domain;
 require_once 'inc/alastyr.php';
 function alastyr_GetConfigArray() {
-	$configarray = array( "Description" => array( "Type" => "System", "Value" => "Henüz Alastyr hesabınız yoksa <a href=\"https://www.alastyr.com/secure/register.php\" target=\"_blank\">www.alastyr.com</a> adresinden oluşturabilirsiniz." ), "ApiKey" => array( "Type" => "text", "Size" => "20", "Description" => "Alastyr TR domain yönetimi sayfasında bulunan API bölümünden alabilirsiniz." ), "ApiSecret" => array( "Type" => "password", "Size" => "20", "Description" => "Alastyr TR domain yönetimi sayfasında bulunan API bölümünden alabilirsiniz." ), "TestMode" => array( "Type" => "yesno" ) );
-	return $configarray;
+    $configarray = array( "Description" => array( "Type" => "System", "Value" => "Henüz Alastyr hesabınız yoksa <a href=\"https://www.alastyr.com/secure/register.php\" target=\"_blank\">www.alastyr.com</a> adresinden oluşturabilirsiniz." ), "ApiKey" => array( "Type" => "text", "Size" => "20", "Description" => "Alastyr TR domain yönetimi sayfasında bulunan API bölümünden alabilirsiniz." ), "ApiSecret" => array( "Type" => "password", "Size" => "20", "Description" => "Alastyr TR domain yönetimi sayfasında bulunan API bölümünden alabilirsiniz." ), "TestMode" => array( "Type" => "yesno" ) );
+    return $configarray;
 }
 
 function alastyr_GetDomainInformation($params){
@@ -151,8 +151,8 @@ function alastyr_RegisterDomain($params) {
     if($freedomain) { // bbs|gen|nom|name|tel|web|tv|biz|info uzantılı tr alan adları
         $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
         $citizenid = $params['customfields'.$citizenfieldid];
-        
-                $taxoffice = $params['customfields'.$taxofficefieldid];
+
+        $taxoffice = $params['customfields'.$taxofficefieldid];
         $taxid = $params['customfields'.$taxidfieldid];
         $postfields['category'] = 0;
         if(!empty($citizenid)){
@@ -256,14 +256,14 @@ function alastyr_GetNameservers($params){
     } else {
         if(is_array($result['nameServers'])){
 
-    $x = 0;
-    $y = 1;
-	while ($x <= 4) {
-		$values["ns" . $y] = $result['nameServers'][$x]['nsName'];
-		++$x;
-		++$y;
-	}
-	return $values;
+            $x = 0;
+            $y = 1;
+            while ($x <= 4) {
+                $values["ns" . $y] = $result['nameServers'][$x]['nsName'];
+                ++$x;
+                ++$y;
+            }
+            return $values;
         }
     }
 }
@@ -301,7 +301,7 @@ function alastyr_SaveNameservers($params){
     }
 }
 function alastyr_RenewDomain($params){
-	$auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     $postfields = array();
     if($params['TestMode'] ==  "on"){
@@ -314,8 +314,8 @@ function alastyr_RenewDomain($params){
     if($res['status'] == "error") {
         return array("error" => alastyr_ErrorMesages($res['code']));
     } else {
-	 	$values = array( "success" => "success" );
-	 	return $values;
+        $values = array( "success" => "success" );
+        return $values;
     }
 }
 function alastyr_SaveContactDetails($params){
@@ -433,11 +433,11 @@ function alastyr_GetDomainSuggestions($params)
 }
 
 function alastyr_DocumentUpload($params){
-	$postfields['domainName'] = $params['sld'] . "." . $params['tld'];
-	$params = array_merge($params, alastyr_GetConfigurationParamsData());
+    $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
 
     $token = generate_token($type = "link");
-	$auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
@@ -449,65 +449,65 @@ function alastyr_DocumentUpload($params){
     $result = $res['result'];
     $logdocuments = "";
 
-	if ($_FILES['attachments']) {
-	foreach ($_FILES['attachments']['name'] as $key => $filename) {
+    if ($_FILES['attachments']) {
+        foreach ($_FILES['attachments']['name'] as $key => $filename) {
 
-	    if((!empty($_FILES["attachments"]["tmp_name"][$key])) or (!empty($_POST['doctype'][$key]))){
-		$tmpfile = $_FILES["attachments"]["tmp_name"][$key];   		// temp filename
-		$tmp = explode(".", $filename);
-		$extension = strtolower(end($tmp));
-		$extension = "." . $extension;
-		if($extension == ".pdf"){
-		    $postfields['fileType'] = 1;
-		} elseif($extension == ".jpg"){
-		    $postfields['fileType'] = 2;
-		} elseif($extension == ".jpeg"){
-		    $postfields['fileType'] = 2;
-        } elseif($extension == ".tiff"){
-		    $postfields['fileType'] = 4;
-		} else {
-			return array("error" => "Hatalı dosya türü. Sadece PDF, JPG ve TIFF kabul edilmektedir.");
-		}
+            if((!empty($_FILES["attachments"]["tmp_name"][$key])) or (!empty($_POST['doctype'][$key]))){
+                $tmpfile = $_FILES["attachments"]["tmp_name"][$key];   		// temp filename
+                $tmp = explode(".", $filename);
+                $extension = strtolower(end($tmp));
+                $extension = "." . $extension;
+                if($extension == ".pdf"){
+                    $postfields['fileType'] = 1;
+                } elseif($extension == ".jpg"){
+                    $postfields['fileType'] = 2;
+                } elseif($extension == ".jpeg"){
+                    $postfields['fileType'] = 2;
+                } elseif($extension == ".tiff"){
+                    $postfields['fileType'] = 4;
+                } else {
+                    return array("error" => "Hatalı dosya türü. Sadece PDF, JPG ve TIFF kabul edilmektedir.");
+                }
 
-		$handle = fopen($tmpfile, "r");              // Open the temp file
-		$contents = fread($handle, filesize($tmpfile));  	// Read the temp file
-		fclose($handle);                                 	// Close the temp file
-            $postfields['documents']   = base64_encode($contents);
+                $handle = fopen($tmpfile, "r");              // Open the temp file
+                $contents = fread($handle, filesize($tmpfile));  	// Read the temp file
+                fclose($handle);                                 	// Close the temp file
+                $postfields['documents']   = base64_encode($contents);
 
-       $postfields['description'] = $_POST['doctype'][$key];
-       $postfields['documentType'] = 1;
-       $postfields['operationType'] = 1;
-       $postfields['sourceFileName'] = $filename;
-       $postfields['ticketNumber'] = $result['ticketNumber'];
+                $postfields['description'] = $_POST['doctype'][$key];
+                $postfields['documentType'] = 1;
+                $postfields['operationType'] = 1;
+                $postfields['sourceFileName'] = $filename;
+                $postfields['ticketNumber'] = $result['ticketNumber'];
 
 
-        if($result['status'] == 0){
-            $res = alastyr_getRequest("uploaddocuments", $postfields, $auth);
-            if($res['result']['uploaded'] == "true") {
-                $logdocuments .= "(" . $res['result']['description'] . " : <a href=\"clientsdomains.php?action=domaindetails&id=".$params['domainid']."&regaction=custom&ac=GetDomainDocument&document=".$res['result']['file']."\"  target=\"_blank\">" . $res['result']['file'] . "</a>) ";
+                if($result['status'] == 0){
+                    $res = alastyr_getRequest("uploaddocuments", $postfields, $auth);
+                    if($res['result']['uploaded'] == "true") {
+                        $logdocuments .= "(" . $res['result']['description'] . " : <a href=\"clientsdomains.php?action=domaindetails&id=".$params['domainid']."&regaction=custom&ac=GetDomainDocument&document=".$res['result']['file']."\"  target=\"_blank\">" . $res['result']['file'] . "</a>) ";
+                    } else {
+                        return array('error' => "Dosya yüklenirken hata oluştu");
+                    }
+                }
             } else {
-                return array('error' => "Dosya yüklenirken hata oluştu");
+                return array('error' => "Belge eklemediniz");
             }
         }
-	} else {
-	        return array('error' => "Belge eklemediniz");
+        if(!empty($logdocuments)) {
+            $laststate['detail'] = "Alan adı için belge yüklendi " . $logdocuments;
+            $logarray = array('logtype' => "action", 'domainid' => $params['domainid'], 'userid' => "", 'domainname' => $postfields['domainName'], 'ticketid' => $result['ticketNumber'], 'laststatus' => $result['status'], 'actiontype' => $result['actionType'], 'actioncomment' => $result['actionComment'], 'lastdescription' => $laststate['detail']);
+            alastyr_addDomainLog($logarray);
+            return array( "success" => "success" );
         }
     }
-	if(!empty($logdocuments)) {
-        $laststate['detail'] = "Alan adı için belge yüklendi " . $logdocuments;
-        $logarray = array('logtype' => "action", 'domainid' => $params['domainid'], 'userid' => "", 'domainname' => $postfields['domainName'], 'ticketid' => $result['ticketNumber'], 'laststatus' => $result['status'], 'actiontype' => $result['actionType'], 'actioncomment' => $result['actionComment'], 'lastdescription' => $laststate['detail']);
-        alastyr_addDomainLog($logarray);
-        return array( "success" => "success" );
-    }
-	}
 }
 
 function alastyr_SendDocument($params){
-	$postfields['domainName'] = $params['sld'] . "." . $params['tld'];
-	$params = array_merge($params, alastyr_GetConfigurationParamsData());
+    $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
 
 
-	$auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
@@ -522,70 +522,70 @@ function alastyr_SendDocument($params){
     $result = $res['result'];
     $logdocuments = "";
     logModuleCall('alastyr', 'file1', $res, $_FILES['attachments']['name'], '', '');
-	if ($_FILES['attachments']) {
-	foreach ($_FILES['attachments']['name'] as $key => $filename) {
+    if ($_FILES['attachments']) {
+        foreach ($_FILES['attachments']['name'] as $key => $filename) {
 
-	    if((!empty($_FILES["attachments"]["tmp_name"][$key])) or (!empty($_POST['doctype'][$key]))){
-		$tmpfile = $_FILES["attachments"]["tmp_name"][$key];   		// temp filename
+            if((!empty($_FILES["attachments"]["tmp_name"][$key])) or (!empty($_POST['doctype'][$key]))){
+                $tmpfile = $_FILES["attachments"]["tmp_name"][$key];   		// temp filename
 
-		$tmp = explode(".", $filename);
-		$extension = strtolower(end($tmp));
-		$extension = "." . $extension;
+                $tmp = explode(".", $filename);
+                $extension = strtolower(end($tmp));
+                $extension = "." . $extension;
 
-		if($extension == ".pdf"){
-		$postfields['fileType'] = 1;
-		} elseif($extension == ".jpg"){
-		$postfields['fileType'] = 2;
-		}  elseif($extension == ".jpeg"){
-            $postfields['fileType'] = 2;
-        }
-		elseif($extension == ".tiff"){
-		$postfields['fileType'] = 4;
-		} else {
-            return 'error';
-		}
+                if($extension == ".pdf"){
+                    $postfields['fileType'] = 1;
+                } elseif($extension == ".jpg"){
+                    $postfields['fileType'] = 2;
+                }  elseif($extension == ".jpeg"){
+                    $postfields['fileType'] = 2;
+                }
+                elseif($extension == ".tiff"){
+                    $postfields['fileType'] = 4;
+                } else {
+                    return 'error';
+                }
 
-		$handle = fopen($tmpfile, "r");              // Open the temp file
-		$contents = fread($handle, filesize($tmpfile));  	// Read the temp file
-		fclose($handle);                                 	// Close the temp file
-            $postfields['documents']   = base64_encode($contents);
-
-
-            if( ($domain_data['status'] == 'Pending Transfer')){
-                $postfields['documentType'] = 3;
-                $postfields['description'] = $_POST['doctype'][$key];
-                $postfields['operationType'] = 1;
-                $postfields['sourceFileName'] = $filename;
-               // $postfields['ticketNumber'] = $result['ticketNumber'];
-            } else {
-                $postfields['documentType'] = 1;
-                $postfields['description'] = $_POST['doctype'][$key];
-                $postfields['operationType'] = 1;
-                $postfields['sourceFileName'] = $filename;
-                $postfields['ticketNumber'] = $result['ticketNumber'];
-            }
+                $handle = fopen($tmpfile, "r");              // Open the temp file
+                $contents = fread($handle, filesize($tmpfile));  	// Read the temp file
+                fclose($handle);                                 	// Close the temp file
+                $postfields['documents']   = base64_encode($contents);
 
 
+                if( ($domain_data['status'] == 'Pending Transfer')){
+                    $postfields['documentType'] = 3;
+                    $postfields['description'] = $_POST['doctype'][$key];
+                    $postfields['operationType'] = 1;
+                    $postfields['sourceFileName'] = $filename;
+                    // $postfields['ticketNumber'] = $result['ticketNumber'];
+                } else {
+                    $postfields['documentType'] = 1;
+                    $postfields['description'] = $_POST['doctype'][$key];
+                    $postfields['operationType'] = 1;
+                    $postfields['sourceFileName'] = $filename;
+                    $postfields['ticketNumber'] = $result['ticketNumber'];
+                }
 
-        if($result['status'] == 0){
-            $res = alastyr_getRequest("uploaddocuments", $postfields, $auth);
-            if($res['result']['uploaded'] == "true") {
-                $logdocuments .= "(" . $res['result']['description'] . " : <a href=\"clientsdomains.php?action=domaindetails&id=".$params['domainid']."&regaction=custom&ac=GetDomainDocument&document=".$res['result']['file']."\"  target=\"_blank\">" . $res['result']['file'] . "</a>) ";
+
+
+                if($result['status'] == 0){
+                    $res = alastyr_getRequest("uploaddocuments", $postfields, $auth);
+                    if($res['result']['uploaded'] == "true") {
+                        $logdocuments .= "(" . $res['result']['description'] . " : <a href=\"clientsdomains.php?action=domaindetails&id=".$params['domainid']."&regaction=custom&ac=GetDomainDocument&document=".$res['result']['file']."\"  target=\"_blank\">" . $res['result']['file'] . "</a>) ";
+                    } else {
+                        return "error";
+                    }
+                }
             } else {
                 return "error";
             }
         }
-	} else {
-	        return "error";
+        if(!empty($logdocuments)) {
+            $laststate['detail'] = "Alan adı için belge yüklendi " . $logdocuments;
+            $logarray = array('logtype' => "action", 'domainid' => $params['domainid'], 'userid' => "", 'domainname' => $postfields['domainName'], 'ticketid' => $result['ticketNumber'], 'laststatus' => $result['status'], 'actiontype' => $result['actionType'], 'actioncomment' => $result['actionComment'], 'lastdescription' => $laststate['detail']);
+            alastyr_addDomainLog($logarray);
+            return "success";
         }
     }
-	if(!empty($logdocuments)) {
-        $laststate['detail'] = "Alan adı için belge yüklendi " . $logdocuments;
-        $logarray = array('logtype' => "action", 'domainid' => $params['domainid'], 'userid' => "", 'domainname' => $postfields['domainName'], 'ticketid' => $result['ticketNumber'], 'laststatus' => $result['status'], 'actiontype' => $result['actionType'], 'actioncomment' => $result['actionComment'], 'lastdescription' => $laststate['detail']);
-        alastyr_addDomainLog($logarray);
-        return "success";
-    }
-	}
 }
 
 
@@ -618,10 +618,10 @@ function alastyr_RequestDelete($params){
 
 
 function alastyr_AdminDomainsTabFields($params) {
-	$postfields = array();
-	$postfields['domainName'] = $params['sld'] . "." . $params['tld'];
-	$params = array_merge($params, alastyr_GetConfigurationParamsData());
-	$auth['ApiSecret'] = $params['ApiSecret'];
+    $postfields = array();
+    $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
+    $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     if($params['TestMode'] ==  "on"){
         $postfields['mode'] = "test";
@@ -631,46 +631,46 @@ function alastyr_AdminDomainsTabFields($params) {
     $result = alastyr_getRequest("getdomainstatusdomain", $postfields, $auth);
 
     if(($result['status'] != 'error') or ($domain_data['status'] == 'Pending Transfer')){
-    if(($result['result']['status'] == 0) or ($domain_data['status'] == 'Pending Transfer')){
-        $token = generate_token($type = "link");
-	      $notes_button = '
+        if(($result['result']['status'] == 0) or ($domain_data['status'] == 'Pending Transfer')){
+            $token = generate_token($type = "link");
+            $notes_button = '
     <div>
         <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#upload-form">Belge Gönder</button>
         <a href="clientsdomains.php?action=domaindetails&id='.$params['domainid'].'&regaction=custom&ac=ApplicationForm'.$token.'" class="btn btn-success" target="_blank">Alan Adı Tahsis Formu İndir</a>
         <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#view_notes">İşlem Logları</button>
     </div>';
-        if( ($domain_data['status'] == 'Pending Transfer')){
-            $params['ordertype'] = "transfer";
-        }
-    $upload_modal = alastyr_ViewUploadForm($params);
-    $notes_modal = alastyr_ViewDomainLogs($params);
+            if( ($domain_data['status'] == 'Pending Transfer')){
+                $params['ordertype'] = "transfer";
+            }
+            $upload_modal = alastyr_ViewUploadForm($params);
+            $notes_modal = alastyr_ViewDomainLogs($params);
 
-    if( ($domain_data['status'] == 'Pending Transfer')){
-        $note = "Transfer için belge bekleniyor";
-    } else {
-        if ($result['result']['actionComment']) {
-            $note = alastyr_ActionTypes($result['result']['actionType']) . ' - ' . trim(str_replace('[Lutfen Seciniz]', '', $result['result']['actionComment']));
-        } else {
-            $note = alastyr_ActionTypes($result['result']['actionType']) . ' - ' . $result['result']['detail'];
+            if( ($domain_data['status'] == 'Pending Transfer')){
+                $note = "Transfer için belge bekleniyor";
+            } else {
+                if ($result['result']['actionComment']) {
+                    $note = alastyr_ActionTypes($result['result']['actionType']) . ' - ' . trim(str_replace('[Lutfen Seciniz]', '', $result['result']['actionComment']));
+                } else {
+                    $note = alastyr_ActionTypes($result['result']['actionType']) . ' - ' . $result['result']['detail'];
+                }
+            }
+            return array(
+                'Alan Adı Son Durumu' => '<b style="color: #f00;">'. $note .'</b>',
+                'İşlemler' => $notes_button.$upload_modal.$notes_modal,
+            );
         }
-    }
-        return array(
-            'Alan Adı Son Durumu' => '<b style="color: #f00;">'. $note .'</b>',
-            'İşlemler' => $notes_button.$upload_modal.$notes_modal,
-        );
-    }
-    else {
-        $notes_button = '
+        else {
+            $notes_button = '
     <div>
         <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#view_notes">İşlem Logları</button>
     </div>';
 
-        $notes_modal = alastyr_ViewDomainLogs($params);
-        return array(
-            'Alan Adı Son Durumu' => '<b style="color: #f00;">'.$result['result']['detail'].'</b>',
-            'İşlemler' => $notes_button.$notes_modal,
-        );
-    }
+            $notes_modal = alastyr_ViewDomainLogs($params);
+            return array(
+                'Alan Adı Son Durumu' => '<b style="color: #f00;">'.$result['result']['detail'].'</b>',
+                'İşlemler' => $notes_button.$notes_modal,
+            );
+        }
     } else {
         $notes_button = '
     <div>
@@ -736,7 +736,7 @@ function alastyr_ClientArea($params)
             $template = "clientareaz.tpl";
             $templatefile = dirname(__FILE__) . "/" . $template .
 
-            $screen->assign('upload_modal', $upload_modal);
+                $screen->assign('upload_modal', $upload_modal);
             $screen->assign('upload_button', $upload_button);
 
             return array(
