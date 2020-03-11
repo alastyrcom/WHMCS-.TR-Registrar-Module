@@ -50,8 +50,8 @@ foreach($waitingdomains as $domain){
         );
         $results = localAPI($command, $postDatamail);
 
-        $laststate = alastyr_DomainInfo($postfields);
-        $expdate = date("Y-m-d", substr($laststate['expirationDate'], 0, -3 ));
+        $lastinfo = alastyr_DomainInfo($postfields);
+        $expdate = date("Y-m-d", substr($lastinfo['expirationDate'], 0, -3 ));
         $command = 'UpdateClientDomain';
         $postDataexp = array(
             'domainid' => $domaininfo->id,
