@@ -179,11 +179,11 @@ function alastyr_RegisterDomain($params) {
     }
     $postfields['email'] = $params['email'];
     $postfields['phone'] = $params['phonenumberformatted'];
-    $postfields['address1'] = $params['address1'];
-    if(!empty($params['address2'])){
-        $postfields['address1'] = $params['address2'];
+    $postfields['address1'] = $params['additionalfields']['traddress1'];
+    if(!empty($params['additionalfields']['traddress2'])){
+        $postfields['address1'] = $params['additionalfields']['traddress2'];
     }
-    $postfields['city'] = $params['city'];
+    $postfields['city'] = $params['additionalfields']['trdomaincity'];
     $postfields['country'] = $params['countryname'];
     $postfields['duration'] = $params['regperiod'] * 12;
     $nameserver1 = $params['ns1'];
