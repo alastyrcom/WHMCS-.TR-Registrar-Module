@@ -10,6 +10,8 @@ $_LANG['trdomainphone'] = "Firma Tel. No";
 $_LANG['trdomaincity'] = "Şehir";
 $_LANG['trdomaincountry'] = "Ülke";
 $_LANG['trpostcode'] = "Posta Kodu";
+$_LANG['traddress1'] = "Firma Adresi";
+$_LANG['traddress2'] = "Firma Adresi Devamı";
 
 
 $additionaldomainfields[".com.tr"][] = array("Name" => "trdomaincategory", "LangVar" => "trdomaincategory", "Deneme" => "dene","Type" => "dropdown", "Options" => "Kurum Adına,Şahıs Adına,adsoyad.com.tr", "Default" => "Kurum Adına","Required" => true,);
