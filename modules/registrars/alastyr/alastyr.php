@@ -131,7 +131,7 @@ function alastyr_RegisterDomain($params) {
     if($params['TestMode'] ==  "on"){
         $postfields['mode'] = "test";
     }
-    $directdomain = "bbs|gen|nom|name|tel|web|tv|biz|info";
+    $directdomain = "bbs|gen|nom|name|tel|web|tv|biz|info|com|net|org";
     $directassign = explode('|', $directdomain);
     foreach ($directassign as $direct) {
         if($params['tld'] == $direct . ".tr"){
@@ -149,21 +149,25 @@ function alastyr_RegisterDomain($params) {
     $taxidfieldid = $taxidfieldid[0];
 
     if($freedomain) { // bbs|gen|nom|name|tel|web|tv|biz|info uzantılı tr alan adları
-        $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
-        $citizenid = $params['customfields'.$citizenfieldid];
 
+        $citizenid = $params['customfields'.$citizenfieldid];
         $taxoffice = $params['customfields'.$taxofficefieldid];
         $taxid = $params['customfields'.$taxidfieldid];
         $postfields['category'] = 0;
-        if(!empty($citizenid)){
+        if(empty($params["companyname"])){
+            $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
             $postfields['citizenid'] = $citizenid;
         } else {
+            $companyname = $params["companyname"];
+            $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
+            $postfields["organization"] = $companyname;
             $postfields['taxoffice'] = $taxoffice;
             $postfields['taxnumber'] = $taxid;
         }
     } else { // belge gerektiren alan adları
         if($params['additionalfields']['trdomaincategory'] == 'Kurum Adına') {
             $postfields['category'] = 0;
+            $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
             $postfields['organization'] = $params['additionalfields']['trdomainorganization'];//firma adı gerekli
             $postfields['taxoffice'] = $params['additionalfields']['trdomaintaxoffice']; //vergi dairesi gerekli
             $postfields['taxnumber'] = $params['additionalfields']['trdomaintaxorcitizenid'];//vergi numarası gerekli
@@ -179,12 +183,13 @@ function alastyr_RegisterDomain($params) {
     }
     $postfields['email'] = $params['email'];
     $postfields['phone'] = $params['phonenumberformatted'];
-    $postfields['address1'] = $params['additionalfields']['traddress1'];
-    if(!empty($params['additionalfields']['traddress2'])){
-        $postfields['address1'] = $params['additionalfields']['traddress2'];
+    $postfields['address1'] = $params['address1'];
+    if(!empty($params['address2'])){
+        $postfields['address1'] = $params['address2'];
     }
-    $postfields['city'] = $params['additionalfields']['trdomaincity'];
+    $postfields['city'] = $params['city'];
     $postfields['country'] = $params['countryname'];
+    $postfields["zipcode"] = $params["postcode"];
     $postfields['duration'] = $params['regperiod'] * 12;
     $nameserver1 = $params['ns1'];
     $nameserver2 = $params['ns2'];
@@ -239,6 +244,125 @@ function alastyr_RegisterDomain($params) {
         }
     }
 }
+function alastyr_IDProtectToggle($params)
+{
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+
+
+    $postfields['domainName'] = $params['original']['sld'] . "." . $params['original']['tld'];
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    if($params["protectenable"]){
+        $postfields['privacy'] = 1;
+    } else {
+        $postfields['privacy'] = 0;
+    }
+    $res = alastyr_getRequest("setOwnerPrivacy", $postfields, $auth);
+    $result = $res['result'];
+
+
+    if($res['status'] == "error") {
+        return array("error" => alastyr_ErrorMesages($res['code']));
+    } else {
+        update_query("tbldomains", array("idprotection" => $postfields['privacy']), array("id" => $params["domainid"]));
+    }
+
+
+}
+function alastyr_TransferDomain($params)
+{
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    $directdomain = "bbs|gen|nom|name|tel|web|tv|biz|info";
+    $directassign = explode('|', $directdomain);
+    foreach ($directassign as $direct) {
+        if($params['tld'] == $direct . ".tr"){
+            $freedomain = 1;
+        }
+    }
+
+    $postfields['domainName'] = $params['original']['sld'] . "." . $params['original']['tld'];
+    $settings = alastyr_moduleConfig();
+    $citizenfieldid = explode('|', $settings['option1']);
+    $citizenfieldid = $citizenfieldid[0];
+    $taxofficefieldid = explode('|', $settings['option2']);
+    $taxofficefieldid = $taxofficefieldid[0];
+    $taxidfieldid = explode('|', $settings['option3']);
+    $taxidfieldid = $taxidfieldid[0];
+
+// bbs|gen|nom|name|tel|web|tv|biz|info uzantılı tr alan adları
+
+    $citizenid = $params['customfields'.$citizenfieldid];
+    $taxoffice = $params['customfields'.$taxofficefieldid];
+    $taxid = $params['customfields'.$taxidfieldid];
+    $postfields['category'] = 0;
+    if(!empty($citizenid)){
+        $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
+        $postfields['citizenid'] = $citizenid;
+    } else {
+        $companyname = $params["companyname"];
+        if (!$companyname) {
+            $companyname = "N/A";
+        }
+        $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
+        $postfields["organization"] = $companyname;
+        $postfields['taxoffice'] = $taxoffice;
+        $postfields['taxnumber'] = $taxid;
+    }
+
+
+    $postfields['email'] = $params['email'];
+    $postfields['phone'] = $params['phonenumberformatted'];
+    $postfields['address1'] = $params['address1'];
+    if(!empty($params['address2'])){
+        $postfields['address1'] = $params['address2'];
+    }
+    $postfields['city'] = $params['city'];
+    $postfields['country'] = $params['countryname'];
+    $postfields["zipcode"] = $params["postcode"];
+    $postfields['duration'] = $params['regperiod'] * 12;
+
+
+    $nameserver1 = $params['ns1'];
+    $nameserver2 = $params['ns2'];
+    $nameserver3 = $params['ns3'];
+    $nameserver4 = $params['ns4'];
+    $nameserver5 = $params['ns5'];
+    $nslist = "ns1=" . $nameserver1 . "&ns2=" . $nameserver2;
+    if ($nameserver3) {
+        $nslist .= "&ns3=" . $nameserver3;
+    }
+    if ($nameserver4) {
+        $nslist .= "&ns4=" . $nameserver4;
+    }
+    if ($nameserver5) {
+        $nslist .= "&ns5=" . $nameserver5;
+    }
+    $postfields['ns'] = "" . $nslist;
+
+    $res = alastyr_getRequest("domaintransfer", $postfields, $auth);
+    logModuleCall('alastyr', 'TransferDomain', $postfields, $res, '', '');
+    $result = $res['result'];
+    if ($res['status'] == "error") {
+        return array("error" => alastyr_ErrorMesages($res['code']));
+    } else {
+
+        $laststate = alastyr_CheckDomainStatus($postfields);
+        $logarray = array('domainid' => $params['domainid'], 'userid' => $params['userid'], 'domainname' => $postfields['domainName'], 'ticketid' => $result['ticketNumber'], 'laststatus' => $laststate['status'], 'actiontype' => $laststate['actionType'], 'actioncomment' => $laststate['actionComment'], 'lastdescription' => $laststate['detail']);
+        alastyr_addDomainLog($logarray);
+        $values = array("success" => "success");
+        return $values;
+
+    }
+}
+
 function alastyr_GetNameservers($params){
     $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
@@ -292,6 +416,8 @@ function alastyr_SaveNameservers($params){
         $postfields['mode'] = "test";
     }
     $res = alastyr_getRequest("updatenameservers", $postfields, $auth);
+
+
     logModuleCall('alastyr', 'SaveNameservers', $postfields, $res, '', '');
     if($res['status'] == "error") {
         return array("error" => alastyr_ErrorMesages($res['code']));
@@ -335,6 +461,8 @@ function alastyr_SaveContactDetails($params){
     $postfields['city'] = $params['contactdetails']['Owner']['City'];
     $postfields['country'] = $params['contactdetails']['Owner']['Country'];
     $postfields['phone'] = $params['contactdetails']['Owner']['Phone Number'];
+    //$postfields['name'] = $params['contactdetails']['Owner']['Full Name'];
+    //$postfields['organization'] = $params['contactdetails']['Owner']['Company Name'];
 
     $res = alastyr_getRequest("updatedomainowner", $postfields, $auth);
     logModuleCall('alastyr', 'SaveContactDetails', $postfields, $res, '', '');
@@ -369,8 +497,29 @@ function alastyr_GetContactDetails($params){
         return $values;
     }
 }
+function alastyr_GetEPPCode($params)
+{
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+    $postfields['domainName'] = $params['original']['sld'] . "." . $params['original']['tld'];
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    $res = alastyr_getRequest("authcode", $postfields, $auth);
+    $result = $res['result'];
+
+
+    if($res['status'] == "error") {
+        return array("error" => alastyr_ErrorMesages($res['code']));
+    } else {
+        $values["eppcode"] = $result["authcode"];
+        return $values;
+    }
+}
 function alastyr_CheckAvailability($params)
 {
+
     $type = App::isInRequest("epp") ? "Transfer" : "Register";
     $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
@@ -385,7 +534,10 @@ function alastyr_CheckAvailability($params)
     });
     $postfields["tlds"] = $params["tlds"];
     $res = alastyr_getRequest("domainwhois", $postfields, $auth);
+
+    logModuleCall('alastyr', 'domainwhois', $postfields, $res , '', '');
     $result = $res['result'];
+
     $results = new WHMCS\Domains\DomainLookup\ResultsList();
     foreach ($result as $domainName => $domainData) {
         $parts = explode(".", $domainName, 2);
@@ -770,9 +922,7 @@ function alastyr_GetDomainDocument($params){
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
     header('Content-Length: ' . strlen($filedata));
-
     echo $filedata;
-
     exit;
 }
 function alastyr_ApplicationForm($params){
