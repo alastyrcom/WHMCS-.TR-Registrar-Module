@@ -13,6 +13,8 @@ $_LANG['trdomaincountry'] = "Ülke";
 $_LANG['trpostcode'] = "Posta Kodu";
 $_LANG['trdomainpreorder'] = "Sipariş Türü";
 
+
+
 $additionaldomainfields[".k12.tr"][] = array("Name" => "trdomaincategory", "LangVar" => "trdomaincategory", "Deneme" => "dene","Type" => "dropdown", "Options" => "Kurum Adına,Şahıs Adına", "Default" => "Kurum Adına","Required" => true,);
 $additionaldomainfields[".k12.tr"][] = array("Name" => "trdomainorganization", "LangVar" => "trdomainorganization", "Type" => "text", "Size" => "40", "Default" => "","Required" => false,);
 $additionaldomainfields[".k12.tr"][] = array("Name" => "trdomainname", "LangVar" => "trdomainname", "Type" => "text", "Size" => "40", "Default" => "","Required" => true,);
@@ -20,7 +22,7 @@ $additionaldomainfields[".k12.tr"][] = array("Name" => "trdomaintaxorcitizenid",
 $additionaldomainfields[".k12.tr"][] = array("Name" => "trdomaintaxoffice", "LangVar" => "trdomaintaxoffice", "Type" => "text", "Size" => "40", "Default" => "", "Required" => false,);
 $additionaldomainfields[".k12.tr"][] = array("Name" => "traddress1", "LangVar" => "traddress1", "Type" => "text", "Size" => "50", "Default" => "", "Required" => false,);
 $additionaldomainfields[".k12.tr"][] = array("Name" => "traddress2", "LangVar" => "traddress2", "Type" => "text", "Size" => "50", "Default" => "", "Required" => false,);
-$additionaldomainfields[".k12.tr"][] = array("Name" => "trdomaincity", "LangVar" => "trdomaincity", "Type" => "text", "Size" => "40", "Default" => "", "Required" => false,);
+$additionaldomainfields["..k12.tr"][] = array("Name" => "trdomaincity", "LangVar" => "trdomaincity", "Type" => "text", "Size" => "40", "Default" => "", "Required" => false,);
 
 
 $additionaldomainfields[".tsk.tr"][] = array("Name" => "trdomaincategory", "LangVar" => "trdomaincategory", "Deneme" => "dene","Type" => "dropdown", "Options" => "Kurum Adına,Şahıs Adına", "Default" => "Kurum Adına","Required" => true,);
