@@ -40,7 +40,7 @@ class AlastyrInfo extends AbstractWidget
         }
     }
     $sPost .= "&api_key=".$auth['ApiKey']."&api_secret=".$auth['ApiSecret']."";
-    $sTarget = "https://api.alastyr.com/v1/".$command;
+    $sTarget = "https://api.alastyr.com/v2/".$command;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $sTarget);
     curl_setopt($ch, CURLOPT_POST, true);

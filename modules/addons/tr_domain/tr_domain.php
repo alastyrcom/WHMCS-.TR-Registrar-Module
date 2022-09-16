@@ -13,7 +13,7 @@ function tr_domain_config() {
     $configarray = array(
         "name" => "Alastyr Domain",
         "description" => ".TR alan adı kaydı için gerekli ayarlar ve düzenlemeler. (TR uzantılı alan adlarının kayıt edilmesi için aktif edilmelidir.)",
-        "version" => "1.0",
+        "version" => "2.0",
         "author" => "Alastyr",
         "fields" => array(
             "option1" => array ("FriendlyName" => "TC Kimlik No Alanı", "Type" => "dropdown", "Options" =>
