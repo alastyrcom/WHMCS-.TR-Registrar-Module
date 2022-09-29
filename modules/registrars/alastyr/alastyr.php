@@ -21,11 +21,11 @@ function alastyr_GetDomainInformation($params){
         $postfields['mode'] = "test";
     }
     $res = alastyr_getRequest("getdomaininfo", $postfields, $auth);
-
+    logModuleCall('alastyr', 'getdomaininfo', $res, $status, '', '');
     $result = $res['result'];
     if($res['status'] == "error") {
         $status =  alastyr_CheckDomainStatus($postfields);
-        logModuleCall('alastyr', 'getdomaininfo', $res, $status, '', '');
+        logModuleCall('alastyr', 'CheckDomainStatus', $res, $status, '', '');
 
         if($status['detail']){
             return array("error" => $status['detail']);
@@ -44,12 +44,75 @@ function alastyr_GetDomainInformation($params){
                 ++$y;
             }
         }
+
+        if ($result["transferLocked"] == "1") {
+            $lockstatus = "locked";
+        }
     }
     return (new Domain)
         ->setDomain($postfields['domainName'])
         ->setNameservers($values);
 }
+function alastyr_GetRegistrarLock($params)
+{
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+    $postfields['domainName'] =  $params['original']['sld'] . "." . $params['original']['tld'];
 
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    $res = alastyr_getRequest("getdomaininfo", $postfields, $auth);
+    logModuleCall('alastyr', 'getdomaininfo', $res, $status, '', '');
+    $result = $res['result'];
+    if($res['status'] == "error") {
+        $status =  alastyr_CheckDomainStatus($postfields);
+        logModuleCall('alastyr', 'CheckDomainLock', $res, $status, '', '');
+
+        if($status['detail']){
+            return array("error" => $status['detail']);
+        } else {
+            return array("error" => alastyr_ErrorMesages($res['code']));
+        }
+
+    } else {
+
+        if ($result["transferLocked"] == "true") {
+            $lockstatus = "locked";
+        } else {
+            $lockstatus = "unlocked";
+        }
+    }
+
+    return $lockstatus;
+}
+function alastyr_SaveRegistrarLock($params)
+{
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    $postfields = array();
+    $postfields['domainName'] = $params['original']['sld'] . "." . $params['original']['tld'];
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    if($params["lockenabled"] == "locked"){
+        $postfields['lock'] = "on";
+        $res = alastyr_getRequest("lockdomain", $postfields, $auth);
+    } else {
+        $postfields['lock'] = "unchecked";
+        $res = alastyr_getRequest("unlockdomain", $postfields, $auth);
+    }
+    $result = $res['result'];
+
+
+    if($res['status'] == "error") {
+        return array("error" => alastyr_ErrorMesages($res['code']));
+    } else {
+        update_query("tbldomains", array("transferprotection" => $postfields['privacy']), array("id" => $params["domainid"]));
+    }
+    return array("success" => true);
+}
 function alastyr_RegisterNameserver($params){
     $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
@@ -150,9 +213,20 @@ function alastyr_RegisterDomain($params) {
 
     if($freedomain) { // bbs|gen|nom|name|tel|web|tv|biz|info uzantılı tr alan adları
 
-        $citizenid = $params['customfields'.$citizenfieldid];
-        $taxoffice = $params['customfields'.$taxofficefieldid];
-        $taxid = $params['customfields'.$taxidfieldid];
+        foreach ($params['customfields'] as $cfields){
+            if($cfields['id'] == $citizenfieldid){
+                $citizenid =  $cfields['value'];
+            }
+            if($cfields['id'] == $taxofficefieldid){
+                $taxoffice =  $cfields['value'];
+            }
+            if($cfields['id'] == $taxidfieldid){
+                $taxid =  $cfields['value'];
+            }
+        }
+        //$citizenid = $params['customfields'.$citizenfieldid];
+        //$taxoffice = $params['customfields'.$taxofficefieldid];
+        //$taxid = $params['customfields'.$taxidfieldid];
         $postfields['category'] = 0;
         if(empty($params["companyname"])){
             $postfields['name'] = "" . $params['firstname'] . " " . $params['lastname'];
@@ -280,7 +354,7 @@ function alastyr_TransferDomain($params)
     if($params['TestMode'] ==  "on"){
         $postfields['mode'] = "test";
     }
-    $directdomain = "bbs|gen|nom|name|tel|web|tv|biz|info";
+    $directdomain = "bbs|gen|nom|name|tel|web|tv|biz|info|com|net|org";
     $directassign = explode('|', $directdomain);
     foreach ($directassign as $direct) {
         if($params['tld'] == $direct . ".tr"){
@@ -328,7 +402,7 @@ function alastyr_TransferDomain($params)
     $postfields['country'] = $params['countryname'];
     $postfields["zipcode"] = $params["postcode"];
     $postfields['duration'] = $params['regperiod'] * 12;
-
+    $postfields['authcode'] = $params["transfersecret"];
 
     $nameserver1 = $params['ns1'];
     $nameserver2 = $params['ns2'];
