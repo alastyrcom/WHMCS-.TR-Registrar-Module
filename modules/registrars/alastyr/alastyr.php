@@ -1064,3 +1064,71 @@ function alastyr_getDomainName(WHMCS\Domains\Domain $domain, $skipFilter = false
     }
     return $domainName;
 }
+function alastyrv2_Sync($params) {
+    $postfields = array();
+    $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
+    $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    $result = alastyrv2_getRequest("getdomaininfo", $postfields, $auth);
+	$expire_date = $result['result']['expirationDate'];
+	$seconds = $expire_date / 1000;
+	$expire_is = date("Y-m-d", $seconds);
+	$handle = $result['result']['registrarContact']['nic_handle']; 
+	if($handle == "aa3909-metu") { 
+	
+    return array(
+        'active' => true,
+        'cancelled' => false,
+        'transferredAway' => false,
+        'expirydate' => $expire_is,
+        'error' => ''
+    );
+	}
+	else { 
+	return array(
+        'active' => false,
+        'cancelled' => false,
+        'transferredAway' => true,
+        'expirydate' => $expire_is,
+        'error' => ''
+    );
+	}
+}
+
+function alastyrv2_TransferSync($params) {
+    $postfields = array();
+    $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
+    $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
+    $auth['ApiSecret'] = $params['ApiSecret'];
+    $auth['ApiKey'] = $params['ApiKey'];
+    if($params['TestMode'] ==  "on"){
+        $postfields['mode'] = "test";
+    }
+    $result = alastyrv2_getRequest("getdomaininfo", $postfields, $auth);
+	$expire_date = $result['result']['expirationDate'];
+	$seconds = $expire_date / 1000;
+	$expire_is = date("Y-m-d", $seconds);
+	$handle = $result['result']['registrarContact']['nic_handle']; 
+	if($handle == "aa3909-metu") { 
+	return array(
+        'completed' => true, 
+        'expirydate' => $expire_is, 
+        'failed' => false, 
+        'reason' => '',
+        'error' => '', 
+    );
+	}
+	else { 
+		return array(
+        'completed' => false, 
+        'expirydate' => '', 
+        'failed' => false, 
+        'reason' => '', 
+        'error' => '', 
+    );
+	}
+}
