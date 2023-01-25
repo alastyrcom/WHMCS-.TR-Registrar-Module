@@ -1064,7 +1064,7 @@ function alastyr_getDomainName(WHMCS\Domains\Domain $domain, $skipFilter = false
     }
     return $domainName;
 }
-function alastyrv2_Sync($params) {
+function alastyr_Sync($params) {
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
     $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
@@ -1099,7 +1099,7 @@ function alastyrv2_Sync($params) {
 	}
 }
 
-function alastyrv2_TransferSync($params) {
+function alastyr_TransferSync($params) {
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
     $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
