@@ -1067,13 +1067,13 @@ function alastyr_getDomainName(WHMCS\Domains\Domain $domain, $skipFilter = false
 function alastyr_Sync($params) {
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
-    $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
     $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     if($params['TestMode'] ==  "on"){
         $postfields['mode'] = "test";
     }
-    $result = alastyrv2_getRequest("getdomaininfo", $postfields, $auth);
+    $result = alastyr_getRequest("getdomaininfo", $postfields, $auth);
 	$expire_date = $result['result']['expirationDate'];
 	$seconds = $expire_date / 1000;
 	$expire_is = date("Y-m-d", $seconds);
@@ -1102,13 +1102,13 @@ function alastyr_Sync($params) {
 function alastyr_TransferSync($params) {
     $postfields = array();
     $postfields['domainName'] = $params['sld'] . "." . $params['tld'];
-    $params = array_merge($params, alastyrv2_GetConfigurationParamsData());
+    $params = array_merge($params, alastyr_GetConfigurationParamsData());
     $auth['ApiSecret'] = $params['ApiSecret'];
     $auth['ApiKey'] = $params['ApiKey'];
     if($params['TestMode'] ==  "on"){
         $postfields['mode'] = "test";
     }
-    $result = alastyrv2_getRequest("getdomaininfo", $postfields, $auth);
+    $result = alastyr_getRequest("getdomaininfo", $postfields, $auth);
 	$expire_date = $result['result']['expirationDate'];
 	$seconds = $expire_date / 1000;
 	$expire_is = date("Y-m-d", $seconds);
