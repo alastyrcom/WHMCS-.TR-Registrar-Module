@@ -1078,6 +1078,7 @@ function alastyr_Sync($params) {
 	$seconds = $expire_date / 1000;
 	$expire_is = date("Y-m-d", $seconds);
 	$handle = $result['result']['registrarContact']['nic_handle']; 
+	if(!empty($handle)) { 
 	if($handle == "aa3909-metu") { 
 	
     return array(
@@ -1097,6 +1098,16 @@ function alastyr_Sync($params) {
         'error' => ''
     );
 	}
+	}
+	else {
+	return array(
+        'active' => false,
+        'cancelled' => false,
+        'transferredAway' => false,
+        'expirydate' => '',
+        'error' => 'Veri alınamadı! api ayarlarınızı kontrol ediniz.'
+    );
+	}
 }
 
 function alastyr_TransferSync($params) {
@@ -1113,6 +1124,7 @@ function alastyr_TransferSync($params) {
 	$seconds = $expire_date / 1000;
 	$expire_is = date("Y-m-d", $seconds);
 	$handle = $result['result']['registrarContact']['nic_handle']; 
+	if(!empty($handle)) { 
 	if($handle == "aa3909-metu") { 
 	return array(
         'completed' => true, 
@@ -1129,6 +1141,16 @@ function alastyr_TransferSync($params) {
         'failed' => false, 
         'reason' => '', 
         'error' => '', 
+    );
+	}
+	}
+	else { 
+	return array(
+        'completed' => false, 
+        'expirydate' => '', 
+        'failed' => false, 
+        'reason' => 'Veri Alınamadı!', 
+        'error' => 'Api bağlantınızı kontrol edin!', 
     );
 	}
 }
