@@ -1101,10 +1101,6 @@ function alastyr_Sync($params) {
 	}
 	else {
 	return array(
-        'active' => false,
-        'cancelled' => false,
-        'transferredAway' => false,
-        'expirydate' => '',
         'error' => 'Veri alınamadı! api ayarlarınızı kontrol ediniz.'
     );
 	}
@@ -1135,21 +1131,13 @@ function alastyr_TransferSync($params) {
     );
 	}
 	else { 
-		return array(
-        'completed' => false, 
-        'expirydate' => '', 
-        'failed' => false, 
-        'reason' => '', 
-        'error' => '', 
+	return array(
+	'error' => 'Api bağlantınızı kontrol edin!',
     );
 	}
 	}
 	else { 
 	return array(
-        'completed' => false, 
-        'expirydate' => '', 
-        'failed' => false, 
-        'reason' => 'Veri Alınamadı!', 
         'error' => 'Api bağlantınızı kontrol edin!', 
     );
 	}
