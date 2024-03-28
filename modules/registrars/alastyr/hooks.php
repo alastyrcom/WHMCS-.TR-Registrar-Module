@@ -18,7 +18,7 @@ add_hook('ClientAreaHomepagePanels', 1, function (Item $homePagePanels)
 
     $domainresults = localAPI($command, $postData);
 
-
+if(isset($domainresults['domains']['domain']) && is_array($domainresults['domains']['domain'])) {
     foreach($domainresults['domains']['domain'] as $domaindata){
         if($domaindata['registrar'] == 'alastyr'){
             $domainstatus = Capsule::table('mod_alastyrdomain')->where('domainname', '=', $domaindata['domainname'])->first();
@@ -30,7 +30,7 @@ add_hook('ClientAreaHomepagePanels', 1, function (Item $homePagePanels)
         }
 
     }
-
+}
 
     if($waitingdocuments == 1){
     $waitingdocuments = $homePagePanels->addChild('waitingdocuments', array(
@@ -69,7 +69,7 @@ add_hook('ClientAreaHomepage', 1, function($vars) {
 
     $domainresults = localAPI($command, $postData);
 
-
+if(isset($domainresults['domains']['domain']) && is_array($domainresults['domains']['domain'])) {
     foreach($domainresults['domains']['domain'] as $domaindata){
         if(($domaindata['registrar'] == 'alastyr') and ($domaindata['status'] == 'Pending Registration')){
             $domainstatus = Capsule::table('mod_alastyrdomain')->where('domainname', '=', $domaindata['domainname'])->first();
@@ -82,7 +82,7 @@ add_hook('ClientAreaHomepage', 1, function($vars) {
         }
 
     }
-
+}
     if($waitingdocuments == 1) {
         $upload_modal = alastyr_ViewClientMultiUploadForm($domains);
         $domainhtml = $upload_modal . "<style>.new-tlds-home-banner {   margin: 5px 0 20px 0;   padding: 14px;   background:#0064CD;   background:-moz-linear-gradient(top, #0064CD 0%, #207ce5 100%);   background:-webkit-linear-gradient(top, #0064CD 0%,#207ce5 100%);   background:-ms-linear-gradient(top, #0064CD 0%,#207ce5 100%);   background:linear-gradient(to bottom, #0064CD 0%,#207ce5 100%);  font-size:1.2em;   color: #fff;   border-radius:5px;   zoom:1;}.new-tlds-home-banner a {   color:#FFD20A;\n}\n</style><div class=\"new-tlds-home-banner\"><b><i class=\"fas fa-info-circle\"></i> Belge Bekleyen .TR Alan Adlarınız Var</b><br />
